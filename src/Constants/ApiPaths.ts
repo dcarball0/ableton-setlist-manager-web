@@ -4,6 +4,7 @@ export const WS_PORT = '8080';
 
 export const REST_ENDPOINTS = {
     GET_CUES: '/cues',
+    GET_TEMPO: '/get-tempo',
     START_PLAYING: '/start-playing',
     STOP_PLAYING: '/stop-playing',
     SET_SELECTED_SONG: '/send-cue',

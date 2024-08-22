@@ -34,6 +34,7 @@ function App() {
     socket.addEventListener("message", (event) => {
       try {
         const data = JSON.parse(event.data);
+
         switch (data.type) {
           case WS_TYPES.CURRENT_TIME:
             setCurrentTime(data.time);
@@ -84,6 +85,15 @@ function App() {
     }
   };
 
+  const fetchInitialTempo = async () => {
+    try {
+      const response = await axios.get(`${API_URL}${REST_PORT}${REST_ENDPOINTS.GET_TEMPO}`);
+      setCurrentTempo(response.data.tempo);
+    } catch (error) {
+      console.error("Error fetching initial tempo:", error);
+    }
+  };
+
   const stopPlaying = async () => {
     try {
       const res = await axios.get(
@@ -104,17 +114,34 @@ function App() {
   const toggleLoop = async () => {
     let loopStart;
     let loopLength;
-
+  
     if (!isLooped) {
       if (selectedPartIndex === -1) {
-        const selectedSong = mergedCues[selectedSongIndex].song[0];
-        loopStart = selectedSong.time;
-        loopLength = mergedCues[selectedSongIndex].songLengthInBars;
+        // Check if selectedSongIndex is valid
+        if (selectedSongIndex >= 0 && selectedSongIndex < mergedCues.length) {
+          const selectedSong = mergedCues[selectedSongIndex].song[0];
+          loopStart = selectedSong.time;
+          loopLength = mergedCues[selectedSongIndex].songLengthInBars;
+        } else {
+          console.error("Invalid selectedSongIndex:", selectedSongIndex);
+          return;
+        }
       } else {
-        const selectedPart =
-          mergedCues[selectedSongIndex].songPartsCues[selectedPartIndex];
-        loopStart = selectedPart.time;
-        loopLength = selectedPart.length;
+        // Check if selectedPartIndex is valid
+        if (selectedSongIndex >= 0 && selectedSongIndex < mergedCues.length) {
+          const selectedPart =
+            mergedCues[selectedSongIndex].songPartsCues[selectedPartIndex];
+          if (selectedPart) {
+            loopStart = selectedPart.time;
+            loopLength = selectedPart.length;
+          } else {
+            console.error("Invalid selectedPartIndex:", selectedPartIndex);
+            return;
+          }
+        } else {
+          console.error("Invalid selectedSongIndex:", selectedSongIndex);
+          return;
+        }
       }
       try {
         await axios.post(
@@ -134,9 +161,11 @@ function App() {
       console.error(error);
     }
   };
+  
 
   useEffect(() => {
     fetchCues();
+    fetchInitialTempo();
   }, []);
 
   return (

@@ -26,7 +26,7 @@ export default function MediaSection(props: MediaSectionProps) {
   return (
     <div className="media-section">
       <div className="media-box">
-        <p>{props.currentTempo * 2} BPM</p>
+        <p>{props.currentTempo} BPM</p>
       </div>
       <div className="media-box">
         <p>{props.currentTime.toFixed(0)}</p>

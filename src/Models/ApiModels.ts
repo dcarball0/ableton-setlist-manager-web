@@ -11,13 +11,14 @@ export interface Cue
 
     export interface AdditionalInfo {
         tempo: string;
+        key: string;
     }
 
     export interface MergedCue {
         song: Cue[],
         songPartsCues: PartCue[],
         doesStop: boolean,
-        additionalInfo?:AdditionalInfo,
+        additionalInfo?: AdditionalInfo,
         songLengthInBars: number,
         songLengthInSec?: number
     }

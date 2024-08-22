@@ -101,7 +101,7 @@ export default function CuesListItem(props: CuesListItemProps) {
                 primary={props.songCues.song[0].name}
                 secondary={
                   props.songCues.additionalInfo
-                    ? props.songCues.additionalInfo.tempo
+                    ? `${props.songCues.additionalInfo.tempo} | Key: ${props.songCues.additionalInfo.key}`
                     : ""
                 }
                 secondaryTypographyProps={{ sx: { color: "#a7a7a7" } }}
